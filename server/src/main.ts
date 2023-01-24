@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import * as dotenv from "dotenv";
 import logger, { logMiddleware } from "./utils/logger";
 import connectToDb from "./utils/dbConnection";
@@ -19,7 +19,7 @@ require("./strategies/local");
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/api', routes)
+app.use("/api", routes);
 
 const start = async (): Promise<void> => {
   try {

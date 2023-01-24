@@ -1,7 +1,9 @@
 import argo2 from "argon2";
 import logger from "./logger";
 
-export const hashPassword = async (password: string): Promise<string | null> => {
+export const hashPassword = async (
+  password: string
+): Promise<string | null> => {
   try {
     return await argo2.hash(password);
   } catch (error) {

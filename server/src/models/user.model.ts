@@ -1,5 +1,4 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
-import { Document } from "mongoose";
 
 export class User {
   @prop({ lowercase: true, required: true, unique: true })

@@ -10,6 +10,6 @@ routes.post("/login", passport.authenticate("local"), (req, res) => {
   res.status(200).send({ message: "Login successful" });
 });
 
-routes.post("/register", validateResource(registerSchema) ,handleRegister);
+routes.post("/register", validateResource(registerSchema), handleRegister);
 
 export default routes;

@@ -6,22 +6,19 @@ import logger from "../utils/logger";
 
 type User = {
   _id?: string;
-}
+};
 
 passport.serializeUser((user: User, done) => {
   logger.info("Serializing user...");
-  logger.info(user);
   done(null, user._id);
 });
 
 passport.deserializeUser(async (id, done) => {
   logger.info("Deserializing user...");
-  logger.info(id);
   try {
     const user = await UserModel.findById(id);
     if (!user) throw new Error("User not found");
     logger.info("User found");
-    logger.info(id);
     done(null, user);
   } catch (error) {
     logger.error(error);
