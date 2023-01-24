@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
-import log, { logMiddleware } from "./utils/logger";
+import logger, {logMiddleware } from "./utils/logger";
 
 dotenv.config();
 const port = process.env.PORT || 5000;
@@ -21,10 +21,10 @@ const start = async (): Promise<void> => {
   try {
     await mongoose.connect(mongoUrl);
     app.listen(port, () => {
-      log.info(`Server started on port ${port}`);
+      logger.info(`Server started on port ${port}`);
     });
   } catch (error) {
-    log.error(error);
+    logger.error(error);
     process.exit(1);
   }
 };
