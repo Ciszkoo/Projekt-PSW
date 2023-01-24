@@ -2,6 +2,9 @@ import express, { Request, Response } from "express";
 import * as dotenv from "dotenv";
 import logger, { logMiddleware } from "./utils/logger";
 import connectToDb from "./utils/dbConnection";
+import sessionStore from "./utils/sessionStore";
+import passport from "passport";
+import routes from "./routes/routes";
 
 dotenv.config();
 const port = process.env.PORT || 5000;
@@ -9,12 +12,14 @@ const port = process.env.PORT || 5000;
 const app = express();
 
 app.use(express.json());
-
+app.use(sessionStore);
 app.use(logMiddleware);
 
-app.get("/", (req: Request, res: Response): Response => {
-  return res.json({ message: "Typegoose Example 🤟" });
-});
+require("./strategies/local");
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/api', routes)
 
 const start = async (): Promise<void> => {
   try {
