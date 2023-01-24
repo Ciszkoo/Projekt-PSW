@@ -1,11 +1,10 @@
 import express, { Request, Response } from "express";
-import mongoose from "mongoose";
 import * as dotenv from "dotenv";
-import logger, {logMiddleware } from "./utils/logger";
+import logger, { logMiddleware } from "./utils/logger";
+import connectToDb from "./utils/dbConnection";
 
 dotenv.config();
 const port = process.env.PORT || 5000;
-const mongoUrl = process.env.MONGO_URL || "";
 
 const app = express();
 
@@ -19,7 +18,7 @@ app.get("/", (req: Request, res: Response): Response => {
 
 const start = async (): Promise<void> => {
   try {
-    await mongoose.connect(mongoUrl);
+    await connectToDb();
     app.listen(port, () => {
       logger.info(`Server started on port ${port}`);
     });

@@ -1,24 +1,21 @@
 import dayjs from "dayjs";
 import { NextFunction, Request, Response } from "express";
-import winston from "winston";
+import { format, createLogger, transports } from "winston";
 
-const myFormat = winston.format.printf(({level, message}) => {
+const myFormat = format.printf(({ level, message }) => {
   const timestamp = dayjs().format();
   return `[${timestamp}] ${level.toUpperCase()}: ${message}`;
 });
 
-const logger = winston.createLogger({
+const logger = createLogger({
   level: "info",
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
+  format: format.combine(format.timestamp(), format.json()),
   defaultMeta: { service: "user-service" },
   transports: [
-    new winston.transports.File({ filename: "error.log", level: "error" }),
-    new winston.transports.File({ filename: "combined.log" }),
-    new winston.transports.Console({
-      format: winston.format.combine( myFormat), 
+    new transports.File({ filename: "error.log", level: "error" }),
+    new transports.File({ filename: "combined.log" }),
+    new transports.Console({
+      format: format.combine(myFormat),
     }),
   ],
 });
