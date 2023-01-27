@@ -1,11 +1,8 @@
 import React from "react";
+import Profile from "../components/profile/Profile";
 
 const ProfileRoute = () => {
-  return (
-    <div>
-      <div>Profil</div>
-    </div>
-  );
+  return <Profile />;
 };
 
 export default ProfileRoute;
