@@ -5,12 +5,14 @@ import connectToDb from "./utils/dbConnection";
 import sessionStore from "./utils/sessionStore";
 import passport from "passport";
 import routes from "./routes/routes";
+import cors from "./utils/cors";
 
 dotenv.config();
 const port = process.env.PORT || 5000;
 
 const app = express();
 
+app.use(cors)
 app.use(express.json());
 app.use(sessionStore);
 app.use(logMiddleware);

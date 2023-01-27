@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  #root {
+    @apply text-stone-300 tracking-wider bg-stone-900;
+  }
+
+  input, button {
+    @apply tracking-wider
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
