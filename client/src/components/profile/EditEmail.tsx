@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { selectUser } from "../../reducers/authReducer";
-import { useAppSelector } from "../../reducers/hooks";
+import { editEmail, selectUser } from "../../reducers/authReducer";
+import { useAppDispatch, useAppSelector } from "../../reducers/hooks";
 
 const EditSchema = z.object({
   value: z.string().email(),
@@ -12,7 +12,9 @@ const EditSchema = z.object({
 type EditSchemaType = z.infer<typeof EditSchema>;
 
 const EditEmail = () => {
+  const [isEdited, setIsEdited] = useState<boolean>(false);
   const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
 
   const {
     register,
@@ -24,7 +26,12 @@ const EditEmail = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
+    try {
+      await dispatch(editEmail(data.value));
+      setIsEdited(true);
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   return (

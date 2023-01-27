@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   handleEditEmail,
   handleEditUsername,
+  handleGetUser,
   handleRegister,
 } from "../controllers/user.controller";
 import { isAuth } from "../middleware/authMiddleware";
@@ -17,7 +18,8 @@ const routes = Router();
 // rejestrowanie użytkownika
 routes.post("", validateResource(registerSchema), handleRegister);
 
-// routes.get("", isAuth, handleGetUser);
+// pobieranie danych użytkownika
+routes.get("", isAuth, handleGetUser);
 
 // edycja danych użytkownika
 routes.put(

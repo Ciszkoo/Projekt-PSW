@@ -28,6 +28,53 @@ export const sessionCheck = createAsyncThunk(
   }
 );
 
+export const refreshUserData = createAsyncThunk(
+  "auth/refreshUserData",
+  async (_, thunkApi) => {
+    const response = await axios
+      .get<User>("http://localhost:5000/api/user", {
+        withCredentials: true,
+      })
+      .then((res) => res.data)
+      .catch((err) => null);
+    return response;
+  }
+);
+
+export const editUsername = createAsyncThunk(
+  "auth/editUsername",
+  async (username: string, thunkApi) => {
+    const response = await axios
+      .put(
+        "http://localhost:5000/api/user/username",
+        { value: username },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((_) => thunkApi.dispatch(refreshUserData()))
+      .catch((err) => null);
+    return null;
+  }
+);
+
+export const editEmail = createAsyncThunk(
+  "auth/editEmail",
+  async (email: string, thunkApi) => {
+    const response = await axios
+      .put(
+        "http://localhost:5000/api/user/email",
+        { value: email },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((_) => thunkApi.dispatch(refreshUserData()))
+      .catch((err) => null);
+    return null;
+  }
+);
+
 const initialState: AuthState = {
   user: null,
   authenticated: false,
@@ -48,6 +95,11 @@ export const authSlice = createSlice({
         state.authenticated = true;
       }
       state.state = "idle";
+    });
+    builder.addCase(refreshUserData.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.user = action.payload;
+      }
     });
   },
 });

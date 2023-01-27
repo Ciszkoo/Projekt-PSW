@@ -42,7 +42,11 @@ export const handleEditUsername = async (req: Request, res: Response) => {
   }
   const { value } = req.body;
   user.username = value;
-  await user.save();
+  try {
+    await user.save();
+  } catch (error) {
+    return res.status(400).send({ message: "This username is already taken" });
+  }
   return res.status(200).send({ message: "Username changed" });
 };
 
@@ -57,6 +61,10 @@ export const handleEditEmail = async (req: Request, res: Response) => {
   }
   const { value } = req.body;
   user.email = value;
-  await user.save();
+  try {
+    await user.save();
+  } catch (error) {
+    return res.status(400).send({ message: "This email is already taken" });
+  }
   return res.status(200).send({ message: "Email changed" });
 };
