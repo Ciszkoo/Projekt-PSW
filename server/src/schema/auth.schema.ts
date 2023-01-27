@@ -1,20 +1,4 @@
-import { object, string, TypeOf } from "zod";
-
-export const registerSchema = object({
-  body: object({
-    email: string({
-      required_error: "Email is required",
-    }).email("Invalid email"),
-    password: string({
-      required_error: "Password is required",
-    })
-      .min(8, "Invalid password")
-      .max(20, "Invalid password"),
-    username: string({ required_error: "Username is required" })
-      .min(3, "Invalid username")
-      .max(20, "Invalid username"),
-  }),
-});
+import { object, string } from "zod";
 
 export const loginSchema = object({
   body: object({
@@ -28,5 +12,3 @@ export const loginSchema = object({
       .max(20, "Invalid password"),
   }),
 });
-
-export type CreateSessionInput = TypeOf<typeof registerSchema>["body"];
