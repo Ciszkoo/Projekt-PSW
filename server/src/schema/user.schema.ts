@@ -17,3 +17,23 @@ export const registerSchema = object({
 });
 
 export type RegisterUserInput = TypeOf<typeof registerSchema>["body"];
+
+export const editEmailSchema = object({
+  body: object({
+    value: string({ required_error: "Email is required" }).email(
+      "Invalid email"
+    ),
+  }),
+});
+
+export type EditEmailInput = TypeOf<typeof editEmailSchema>["body"];
+
+export const editUsernameSchema = object({
+  body: object({
+    value: string({ required_error: "Username is required" })
+      .min(3, "Invalid username")
+      .max(20, "Invalid username"),
+  }),
+});
+
+export type EditUsernameInput = TypeOf<typeof editUsernameSchema>["body"];

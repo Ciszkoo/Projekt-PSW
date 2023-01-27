@@ -1,8 +1,16 @@
 import { Router } from "express";
-import { handleGetUser, handleRegister } from "../controllers/user.controller";
+import {
+  handleEditEmail,
+  handleEditUsername,
+  handleRegister,
+} from "../controllers/user.controller";
 import { isAuth } from "../middleware/authMiddleware";
 import validateResource from "../middleware/validateResource";
-import { registerSchema } from "../schema/user.schema";
+import {
+  editEmailSchema,
+  editUsernameSchema,
+  registerSchema,
+} from "../schema/user.schema";
 
 const routes = Router();
 
@@ -10,5 +18,19 @@ const routes = Router();
 routes.post("", validateResource(registerSchema), handleRegister);
 
 // routes.get("", isAuth, handleGetUser);
+
+// edycja danych użytkownika
+routes.put(
+  "/username",
+  isAuth,
+  validateResource(editUsernameSchema),
+  handleEditUsername
+);
+routes.put(
+  "/email",
+  isAuth,
+  validateResource(editEmailSchema),
+  handleEditEmail
+);
 
 export default routes;

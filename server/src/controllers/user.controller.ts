@@ -30,3 +30,33 @@ export const handleGetUser = async (req: Request, res: Response) => {
     .status(200)
     .send({ id: user.id, email: user.email, username: user.username });
 };
+
+export const handleEditUsername = async (req: Request, res: Response) => {
+  if (!req.session.passport) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  const id = req.session.passport.user;
+  const user = await UserModel.findById(id);
+  if (!user) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  const { value } = req.body;
+  user.username = value;
+  await user.save();
+  return res.status(200).send({ message: "Username changed" });
+};
+
+export const handleEditEmail = async (req: Request, res: Response) => {
+  if (!req.session.passport) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  const id = req.session.passport.user;
+  const user = await UserModel.findById(id);
+  if (!user) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  const { value } = req.body;
+  user.email = value;
+  await user.save();
+  return res.status(200).send({ message: "Email changed" });
+};
