@@ -6,8 +6,8 @@ const threads = [
   {
     id: 1,
     title: "Wątek 1",
-    creator: "Kamil",
-    createdAt: "2021-10-10",
+    autor: "Kamil",
+    date: "2021-10-10",
     upvotes: 10,
     downvotes: 0,
     rate: "upvote",
@@ -15,8 +15,8 @@ const threads = [
   {
     id: 2,
     title: "Wątek 2",
-    creator: "Kamil",
-    createdAt: "2021-10-10",
+    autor: "Kamil",
+    date: "2021-10-10",
     upvotes: 10,
     downvotes: 0,
     rate: "downvote",
@@ -24,8 +24,8 @@ const threads = [
   {
     id: 3,
     title: "Wątek 3",
-    creator: "Kamil",
-    createdAt: "2021-10-10",
+    autor: "Kamil",
+    date: "2021-10-10",
     upvotes: 10,
     downvotes: 0,
     rate: null,
@@ -74,10 +74,10 @@ const Forum = () => {
                 <p className="text-xs flex gap-2">
                   Autor:
                   <p className="hover:cursor-pointer hover:underline">
-                    {thread.creator}
+                    {thread.autor}
                   </p>
                 </p>
-                <p className="text-xs">{thread.createdAt}</p>
+                <p className="text-xs">{thread.date}</p>
               </div>
             </li>
           ))}
