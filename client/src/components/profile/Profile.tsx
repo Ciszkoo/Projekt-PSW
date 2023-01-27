@@ -4,6 +4,7 @@ import { selectUser } from "../../reducers/authReducer";
 import { useAppSelector } from "../../reducers/hooks";
 import Card from "../card/Card";
 import { useModal } from "../modal/Modal";
+import DeleteAccount from "./DeleteAccount";
 import EditEmail from "./EditEmail";
 import EditUsername from "./EditUsername";
 
@@ -12,6 +13,7 @@ export const Profile = () => {
 
   const usernameEditModal = useModal(<EditUsername />);
   const emailEditModal = useModal(<EditEmail />);
+  const deleteAccountModal = useModal(<DeleteAccount />);
 
   return (
     <div className="flex-auto flex flex-col justify-center items-center">
@@ -28,11 +30,18 @@ export const Profile = () => {
             <PencilSquareIcon className="h-4 w-4" />
           </button>
         </div>
+        <button
+          className="bg-stone-600 py-2 px-4 rounded-full shadow-md active:shadow-inner"
+          onClick={deleteAccountModal.openModal}
+        >
+          Usuń konto
+        </button>
       </Card>
       {usernameEditModal.modalPortal}
       {emailEditModal.modalPortal}
+      {deleteAccountModal.modalPortal}
     </div>
   );
-}
+};
 
 export default Profile;

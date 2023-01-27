@@ -68,3 +68,12 @@ export const handleEditEmail = async (req: Request, res: Response) => {
   }
   return res.status(200).send({ message: "Email changed" });
 };
+
+export const handleDeleteUser = async (req: Request, res: Response) => {
+  if (!req.session.passport) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  const id = req.session.passport.user;
+  await UserModel.findByIdAndDelete(id);
+  return res.status(200).send({ message: "User deleted" });
+};

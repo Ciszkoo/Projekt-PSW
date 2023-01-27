@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  handleDeleteUser,
   handleEditEmail,
   handleEditUsername,
   handleGetUser,
@@ -21,6 +22,9 @@ routes.post("", validateResource(registerSchema), handleRegister);
 // pobieranie danych użytkownika
 routes.get("", isAuth, handleGetUser);
 
+// usuwanie użytkownika
+routes.delete("", isAuth, handleDeleteUser);
+
 // edycja danych użytkownika
 routes.put(
   "/username",
@@ -28,6 +32,7 @@ routes.put(
   validateResource(editUsernameSchema),
   handleEditUsername
 );
+
 routes.put(
   "/email",
   isAuth,
