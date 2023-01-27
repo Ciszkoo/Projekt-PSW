@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import NavBar from "../components/navbar/NavBar";
 import { selectAuthenticated } from "../reducers/authReducer";
 import { useAppSelector } from "../reducers/hooks";
 
@@ -10,7 +11,12 @@ export const ProtectedRoute = ({ children }: PropsWithChildren) => {
     return <Navigate to="/" replace />;
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <NavBar />
+      <Outlet />
+    </>
+  );
 };
 
 export default ProtectedRoute;

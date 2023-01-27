@@ -3,6 +3,7 @@ import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Card from "../card/Card";
 
 const RegisterSchema = z.object({
   username: z.string().min(3).max(20),
@@ -29,36 +30,37 @@ const RegisterForm = () => {
   });
 
   return (
-    <form
-      className="flex flex-col gap-2 p-5 bg-stone-700 shadow-md shadow-stone-600 rounded-xl"
-      onSubmit={onSubmit}
-    >
-      <p className="font-bold self-center">Rejestracja</p>
-      <input
-        className="bg-stone-500 p-2 rounded-md active:outline-none focus:outline-none"
-        type="text"
-        placeholder="Username..."
-        {...register("username")}
-      />
-      <input
-        className="bg-stone-500 p-2 rounded-md active:outline-none focus:outline-none"
-        type="email"
-        placeholder="E-mail..."
-        {...register("email")}
-      />
-      <input
-        className="bg-stone-500 p-2 rounded-md active:outline-none focus:outline-none"
-        type="password"
-        placeholder="Password..."
-        {...register("password")}
-      />
-      <button
-        className="bg-stone-500 self-center py-2 px-4 rounded-full shadow-stone-600 shadow-md active:shadow-inner"
-        type="submit"
-      >
-        Register
-      </button>
-    </form>
+    <Card>
+      <form className="flex flex-col gap-2 p-5" onSubmit={onSubmit}>
+        <p className="font-bold self-center">Rejestracja</p>
+        <input
+          className="bg-stone-500 p-2 rounded-md active:outline-none focus:outline-none"
+          type="text"
+          placeholder="Username..."
+          autoComplete="off"
+          {...register("username")}
+        />
+        <input
+          className="bg-stone-500 p-2 rounded-md active:outline-none focus:outline-none"
+          type="email"
+          placeholder="E-mail..."
+          autoComplete="off"
+          {...register("email")}
+        />
+        <input
+          className="bg-stone-500 p-2 rounded-md active:outline-none focus:outline-none"
+          type="password"
+          placeholder="Password..."
+          {...register("password")}
+        />
+        <button
+          className="bg-stone-500 self-center py-2 px-4 rounded-full shadow-md active:shadow-inner"
+          type="submit"
+        >
+          Register
+        </button>
+      </form>
+    </Card>
   );
 };
 

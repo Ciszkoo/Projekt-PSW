@@ -1,9 +1,10 @@
 import React from "react";
+import { useResolvedPath } from "react-router-dom";
 
 const HomeRoute = () => {
   return (
     <div>
-      <h1>Home</h1>
+      <div>Graj</div>
     </div>
   );
 };

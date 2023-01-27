@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useAppDispatch } from "../../reducers/hooks";
 import { sessionCheck } from "../../reducers/authReducer";
+import Card from "../card/Card";
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -32,30 +33,33 @@ const LoginForm = () => {
   });
 
   return (
-    <form
-      className="flex flex-col gap-2 p-5 bg-stone-700 shadow-md shadow-stone-600 rounded-xl"
-      onSubmit={onSubmit}
-    >
-      <p className="font-bold self-center">Logowanie</p>
-      <input
-        className="bg-stone-500 p-2 rounded-md active:outline-none focus:outline-none"
-        type="email"
-        placeholder="E-mail..."
-        {...register("email")}
-      />
-      <input
-        className="bg-stone-500 p-2 rounded-md active:outline-none focus:outline-none"
-        type="password"
-        placeholder="Password..."
-        {...register("password")}
-      />
-      <button
-        className="bg-stone-500 self-center py-2 px-4 rounded-full shadow-stone-600 shadow-md active:shadow-inner"
-        type="submit"
+    <Card>
+      <form
+        className="flex flex-col gap-2 p-5"
+        onSubmit={onSubmit}
       >
-        Login
-      </button>
-    </form>
+        <p className="font-bold self-center">Logowanie</p>
+        <input
+          className="bg-stone-500 p-2 rounded-md active:outline-none focus:outline-none"
+          type="email"
+          placeholder="E-mail..."
+          autoComplete="off"
+          {...register("email")}
+        />
+        <input
+          className="bg-stone-500 p-2 rounded-md active:outline-none focus:outline-none"
+          type="password"
+          placeholder="Password..."
+          {...register("password")}
+        />
+        <button
+          className="bg-stone-500 self-center py-2 px-4 rounded-full shadow-md active:shadow-inner"
+          type="submit"
+        >
+          Login
+        </button>
+      </form>
+    </Card>
   );
 };
 
