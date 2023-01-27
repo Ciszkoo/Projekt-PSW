@@ -1,9 +1,8 @@
 import React from "react";
+import Forum from "../components/forum/Forum";
 
 const ForumRoute = () => {
-  return <div>
-    <div>Forum</div>
-  </div>
+  return <Forum />;
 };
 
 export default ForumRoute;
