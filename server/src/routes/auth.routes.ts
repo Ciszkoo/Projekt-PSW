@@ -11,10 +11,13 @@ import { loginSchema } from "../schema/auth.schema";
 
 const routes = Router();
 
+// sprawdzanie sesji + wysyłanie danych użytkownika w przypadku powodzenia
 routes.get("/session", isAuth, handleSessionCheck);
 
+// wylogowywanie użytkownika
 routes.get("/logout", isAuth, handleLogout);
 
+// logowanie użytkownika
 routes.post(
   "/login",
   validateResource(loginSchema),
