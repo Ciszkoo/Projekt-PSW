@@ -1,6 +1,7 @@
 import { Children } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { sessionCheck } from "./reducers/authReducer";
+import { getThreads } from "./reducers/threadsReducer";
 import ForumRoute from "./routes/ForumRoute";
 import HomeRoute from "./routes/HomeRoute";
 import MainRoute from "./routes/MainRoute";
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
       {
         path: "/forum",
         element: <ForumRoute />,
+        loader: () => {
+          store.dispatch(getThreads(1));
+          return null;
+        },
       },
     ],
   },

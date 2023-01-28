@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ThreadModel } from "../models/thread.model";
+import { UserModel } from "../models/user.model";
 
 export const handleCreateThread = async (req: Request, res: Response) => {
   if (!req.session.passport) {
@@ -14,4 +15,45 @@ export const handleCreateThread = async (req: Request, res: Response) => {
     downvotes: [],
   });
   return res.status(201).send({ message: "Thread created" });
+};
+
+export const handleGetThreads = async (req: Request, res: Response) => {
+  if (!req.session.passport) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  const id = req.session.passport.user;
+  const page = req.params.page;
+  const skip = (parseInt(page, 10) - 1) * 10;
+  const threads = await ThreadModel.aggregate([
+    { $sort: { date: -1 } },
+    { $skip: skip },
+    { $limit: 10 },
+  ]);
+  const result = await Promise.all(
+    threads.map(async (thread) => {
+      const upvotes = thread.upvotes.length;
+      const downvotes = thread.downvotes.length;
+      const rate = thread.upvotes.includes(id)
+        ? "upvoted"
+        : thread.downvotes.includes(id)
+        ? "downvoted"
+        : null;
+      const username = await UserModel.findById(thread.author).then(user => {
+        if (user) {
+          return user.username;
+        }
+        return "Użytkownik usunięty"
+      });
+      return {
+        id: thread._id,
+        title: thread.title,
+        author: username,
+        date: thread.date,
+        upvotes,
+        downvotes,
+        rate,
+      };
+    })
+  );
+  return res.status(200).send(result);
 };
