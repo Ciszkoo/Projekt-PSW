@@ -1,7 +1,8 @@
 import { Children } from "react";
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
+import Thread from "./components/forum/Thread";
 import { sessionCheck } from "./reducers/authReducer";
-import { getThreads } from "./reducers/threadsReducer";
+import { getThreads, handleNextPage, setPage } from "./reducers/threadsReducer";
 import ForumRoute from "./routes/ForumRoute";
 import HomeRoute from "./routes/HomeRoute";
 import MainRoute from "./routes/MainRoute";
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
   },
   {
     element: <ProtectedRoute />,
+    loader: async () => {
+      await store.dispatch(sessionCheck());
+      return null;
+    },
     children: [
       {
         path: "/home",
@@ -30,12 +35,41 @@ export const router = createBrowserRouter([
         element: <ProfileRoute />,
       },
       {
-        path: "/forum",
+        path: "/forum/:page",
         element: <ForumRoute />,
-        loader: () => {
-          store.dispatch(getThreads(1));
+        loader: async ({ params }) => {
+          if (
+            !params.page ||
+            parseInt(params.page, 10) < 1 ||
+            isNaN(parseInt(params.page, 10))
+          ) {
+            store.dispatch(setPage(1));
+            await store.dispatch(getThreads(1));
+            return redirect("/forum/1");
+          }
+          const paramPage = parseInt(params.page, 10);
+          const page = store.getState().threads.page;
+          if (paramPage === page) return null;
+          if (page === 0) {
+            store.dispatch(setPage(paramPage));
+            await store.dispatch(getThreads(paramPage));
+            return null;
+          }
+          if (paramPage === page + 1) {
+            console.log("next page");
+            await store.dispatch(handleNextPage(paramPage));
+            store.dispatch(setPage(paramPage));
+            return null;
+          }
+
+          store.dispatch(setPage(paramPage));
+          await store.dispatch(getThreads(paramPage));
           return null;
         },
+      },
+      {
+        path: "/thread/:id",
+        element: <Thread />,
       },
     ],
   },

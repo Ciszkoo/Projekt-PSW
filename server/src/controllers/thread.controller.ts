@@ -29,6 +29,7 @@ export const handleGetThreads = async (req: Request, res: Response) => {
     { $skip: skip },
     { $limit: 10 },
   ]);
+  const threadsCount = await ThreadModel.countDocuments();
   const result = await Promise.all(
     threads.map(async (thread) => {
       const upvotes = thread.upvotes.length;
@@ -48,6 +49,7 @@ export const handleGetThreads = async (req: Request, res: Response) => {
         id: thread._id,
         title: thread.title,
         author: username,
+        authorId: thread.author,
         date: thread.date,
         upvotes,
         downvotes,
@@ -55,5 +57,5 @@ export const handleGetThreads = async (req: Request, res: Response) => {
       };
     })
   );
-  return res.status(200).send(result);
+  return res.status(200).send({threadsCount, threads: result});
 };

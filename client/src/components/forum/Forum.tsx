@@ -1,63 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "../card/Card";
-import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-import { useAppSelector } from "../../reducers/hooks";
-import { selectThreads } from "../../reducers/threadsReducer";
+import { useAppDispatch, useAppSelector } from "../../reducers/hooks";
+import {
+  selectThreads,
+} from "../../reducers/threadsReducer";
+import ThreadsList from "./ThreadsList";
+import {
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+} from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 
 const Forum = () => {
   const threads = useAppSelector(selectThreads);
 
+  const navigate = useNavigate();
+
+  const handleNextPage = () => {
+    navigate(`/forum/${threads.page + 1}`);
+  };
+
+  const handlePrevPage = () => {
+    navigate(`/forum/${threads.page - 1}`);
+  };
+
   return (
     <div className="flex-auto p-10 w-full flex items-stretch justify-center">
-      <Card customClass="grow flex-initial w-full flex flex-col gap-2">
+      <Card customClass="grow flex-initial w-full flex flex-col gap-2 relative">
         <div className="flex gap-5">
-          <button className="bg-stone-600 p-2 rounded-full basis-2/3 hover:bg-stone-800">
+          <button className="bg-stone-600 p-2 rounded-full basis-2/3 hover:bg-stone-800 shadow-md active:shadow-inner">
             Utwórz wątek
           </button>
-          <button className="bg-stone-600 p-2 rounded-full basis-1/3 hover:bg-stone-800">
+          <button className="bg-stone-600 p-2 rounded-full basis-1/3 hover:bg-stone-800 shadow-md active:shadow-inner">
             Szukaj
           </button>
         </div>
         {threads.status === "loading" && <p>Ładowanie...</p>}
         {threads.status === "idle" && (
-          <ul className="px-10 flex flex-col gap-2">
-            {threads.currrentThreads.map((thread) => (
-              <li className="bg-stone-600 p-2 rounded-xl" key={thread.id}>
-                <div className="flex justify-between">
-                  <p className="hover:cursor-pointer hover:underline truncate">
-                    {thread.title}
-                  </p>
-                  <div className="flex gap-2">
-                    <button
-                      className={`flex hover:underline ${
-                        thread.rate === "upvoted" && "text-green-500"
-                      }`}
-                    >
-                      <ChevronUpIcon className="h-5 w-5" />
-                      <p>{thread.upvotes}</p>
-                    </button>
-                    <button
-                      className={`flex hover:underline ${
-                        thread.rate === "downvoted" && "text-red-500"
-                      }`}
-                    >
-                      <ChevronDownIcon className="h-5 w-5" />
-                      <p>{thread.downvotes}</p>
-                    </button>
-                  </div>
-                </div>
-                <div className="flex justify-between">
-                  <div className="text-xs flex gap-2">
-                    Autor:
-                    <p className="hover:cursor-pointer hover:underline">
-                      {thread.author}
-                    </p>
-                  </div>
-                  <p className="text-xs">{thread.date.slice(0, 19).replace("T", " ")}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <>
+            <ThreadsList />
+            <div className="absolute bottom-10 left-1/2 -translate-x-2/4 flex justify-center items-center gap-10">
+              <button
+                className="disabled:bg-stone-800 disabled:shadow-none flex gap-2 bg-stone-600 py-2 px-4 rounded-full hover:bg-stone-900 shadow-md active:shadow-inner "
+                disabled={threads.page === 1}
+                onClick={handlePrevPage}
+              >
+                <ChevronDoubleLeftIcon className="h-5 w-5" />
+                Poprzednia strona
+              </button>
+              <p>{threads.page}</p>
+              <button
+                className="disabled:bg-stone-800 disabled:shadow-none flex gap-2 bg-stone-600 py-2 px-4 rounded-full hover:bg-stone-900 shadow-md active:shadow-inner"
+                disabled={threads.nextThreads.length === 0}
+                onClick={handleNextPage}
+              >
+                Następna strona
+                <ChevronDoubleRightIcon className="h-5 w-5 " />
+              </button>
+            </div>
+          </>
         )}
       </Card>
     </div>

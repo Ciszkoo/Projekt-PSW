@@ -7,7 +7,7 @@ const secret = process.env.SESSION_SECRET || "sekreto";
 const mongoUrl = process.env.MONGO_URL || "";
 
 const sessionStore = session({
-  cookie: { maxAge: 1000 * 60 * 5, httpOnly: true, sameSite: false },
+  cookie: { maxAge: 1000 * 60 * 60, httpOnly: true, sameSite: false },
   store: MongoStore.create({ mongoUrl: mongoUrl }),
   secret: secret,
   saveUninitialized: false,

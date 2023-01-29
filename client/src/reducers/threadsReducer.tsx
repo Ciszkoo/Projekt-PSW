@@ -7,82 +7,109 @@ interface Thread {
   id: string;
   title: string;
   author: string;
+  authorId: string;
   date: string;
   upvotes: number;
   downvotes: number;
   rate: "upvoted" | "downvoted" | null;
 }
 
+interface ThreadsResponse {
+  threads: Thread[];
+  threadsCount: number;
+}
+
 interface ThreadsState {
   page: number;
   currrentThreads: Thread[];
   nextThreads: Thread[];
+  threadsCount: number;
   status: "idle" | "loading";
 }
 
 export const getThreads = createAsyncThunk(
   "threads/getThreads",
   async (page: number, thunkApi) => {
-    const response = await axios
-      .get<Thread[]>(`http://localhost:5000/api/thread/${page}`, {
-        withCredentials: true,
-      })
-      .then((res) => res.data)
-      .catch((err) => null);
-    thunkApi.dispatch(getNextThreads(page + 1));
-    return response;
+    try {
+      const response = await axios
+        .get<ThreadsResponse>(`http://localhost:5000/api/thread/${page}`, {
+          withCredentials: true,
+        })
+        .then((res) => res.data);
+      await thunkApi.dispatch(getNextThreads(page + 1));
+      return response;
+    } catch (error) {
+      thunkApi.rejectWithValue(error);
+    }
   }
 );
 
 export const getNextThreads = createAsyncThunk(
   "threads/getNextThreads",
   async (page: number, thunkApi) => {
-    const response = await axios
-      .get<Thread[]>(`http://localhost:5000/api/thread/${page}`, {
-        withCredentials: true,
-      })
-      .then((res) => res.data)
-      .catch((err) => null);
-    return response;
+    try {
+      const response = await axios
+        .get<ThreadsResponse>(`http://localhost:5000/api/thread/${page}`, {
+          withCredentials: true,
+        })
+        .then((res) => res.data);
+      return response;
+    } catch (error) {
+      thunkApi.rejectWithValue(error);
+    }
   }
 );
 
-export const nextPage = createAsyncThunk(
-  "threads/nextPage",
-  async (_, thunkApi) => {
+export const handleNextPage = createAsyncThunk(
+  "threads/handleNextPage",
+  async (page: number, thunkApi) => {
     const state = thunkApi.getState() as RootState;
-    const page = state.threads.page;
-    const nextThreads = state.threads.nextThreads;
-    await thunkApi.dispatch(getThreads(page + 1));
-    return nextThreads;
+    const threads = state.threads.nextThreads;
+    await thunkApi.dispatch(getNextThreads(page + 1));
+    return threads;
   }
 );
 
 const initialState: ThreadsState = {
-  page: 1,
+  page: 0,
   currrentThreads: [],
   nextThreads: [],
+  threadsCount: 0,
   status: "idle",
 };
 
 export const threadsSlice = createSlice({
   name: "threads",
   initialState,
-  reducers: {},
+  reducers: {
+    setPage: (state, action) => {
+      state.page = action.payload;
+    },
+  },
   extraReducers: (builder) => {
-    builder.addCase(nextPage.fulfilled, (state, action) => {
-      state.currrentThreads = action.payload;
-    });
     builder.addCase(getThreads.pending, (state) => {
       state.status = "loading";
     });
     builder.addCase(getThreads.fulfilled, (state, action) => {
-      state.currrentThreads = action.payload as Thread[];
+      if (action.payload) {
+        state.currrentThreads = action.payload.threads;
+      }
       state.status = "idle";
+    });
+    builder.addCase(getNextThreads.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.threadsCount = action.payload.threadsCount;
+        state.nextThreads = action.payload.threads;
+      }
+    });
+    builder.addCase(handleNextPage.fulfilled, (state, action) => {
+      state.currrentThreads = action.payload;
     });
   },
 });
 
 export const selectThreads = (state: RootState) => state.threads;
+
+export const { setPage } = threadsSlice.actions;
 
 export default threadsSlice.reducer;

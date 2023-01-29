@@ -42,7 +42,7 @@ const NavBar = () => {
           className={`${
             active === "forum" && "bg-stone-900"
           } hover:cursor-pointer hover:bg-stone-900 h-full flex items-center px-10`}
-          onClick={() => handleChangePath("forum")}
+          onClick={() => handleChangePath("forum/1")}
         >
           <p>Forum</p>
         </div>
