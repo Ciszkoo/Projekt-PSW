@@ -3,7 +3,7 @@ import axios from "axios";
 import React from "react";
 import { RootState } from "../store";
 
-interface Thread {
+export interface Thread {
   id: string;
   title: string;
   author: string;
@@ -109,6 +109,8 @@ export const threadsSlice = createSlice({
 });
 
 export const selectThreads = (state: RootState) => state.threads;
+
+export const selectPage = (state: RootState) => state.threads.page;
 
 export const { setPage } = threadsSlice.actions;
 

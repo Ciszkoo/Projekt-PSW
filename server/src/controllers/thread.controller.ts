@@ -59,3 +59,9 @@ export const handleGetThreads = async (req: Request, res: Response) => {
   );
   return res.status(200).send({threadsCount, threads: result});
 };
+
+export const handleDeleteThread = async (req: Request, res: Response) => {
+  const threadId = req.params.id;
+  await ThreadModel.findByIdAndDelete(threadId);
+  return res.status(200).send({ message: "Thread deleted" });  
+}
