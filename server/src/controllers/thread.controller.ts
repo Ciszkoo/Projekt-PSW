@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { CommentModel } from "../models/comment.model";
 import { ThreadModel } from "../models/thread.model";
 import { UserModel } from "../models/user.model";
 
@@ -39,15 +40,16 @@ export const handleGetThreads = async (req: Request, res: Response) => {
         : thread.downvotes.includes(id)
         ? "downvoted"
         : null;
-      const username = await UserModel.findById(thread.author).then(user => {
+      const username = await UserModel.findById(thread.author).then((user) => {
         if (user) {
           return user.username;
         }
-        return "Użytkownik usunięty"
+        return "Użytkownik usunięty";
       });
       return {
         id: thread._id,
         title: thread.title,
+        content: thread.content,
         author: username,
         authorId: thread.author,
         date: thread.date,
@@ -57,11 +59,50 @@ export const handleGetThreads = async (req: Request, res: Response) => {
       };
     })
   );
-  return res.status(200).send({threadsCount, threads: result});
+  return res.status(200).send({ threadsCount, threads: result });
 };
 
 export const handleDeleteThread = async (req: Request, res: Response) => {
   const threadId = req.params.id;
   await ThreadModel.findByIdAndDelete(threadId);
-  return res.status(200).send({ message: "Thread deleted" });  
-}
+  return res.status(200).send({ message: "Thread deleted" });
+};
+
+export const handleGetThreadComments = async (req: Request, res: Response) => {
+  if (!req.session.passport) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  const id = req.session.passport.user;
+  const threadId = req.params.id;
+  const comments = await CommentModel.find({ thread: threadId }).sort({
+    date: -1,
+  });
+  const result = await Promise.all(
+    comments.map(async (comment) => {
+      const upvotes = comment.upvotes.length;
+      const downvotes = comment.downvotes.length;
+      const rate = comment.upvotes.includes(id)
+        ? "upvoted"
+        : comment.downvotes.includes(id)
+        ? "downvoted"
+        : null;
+      const username = await UserModel.findById(comment.author).then((user) => {
+        if (user) {
+          return user.username;
+        }
+        return "Użytkownik usunięty";
+      });
+      return {
+        id: comment._id,
+        content: comment.content,
+        author: username,
+        authorId: comment.author,
+        date: comment.date,
+        upvotes,
+        downvotes,
+        rate,
+      };
+    })
+  );
+  return res.status(200).send(result);
+};

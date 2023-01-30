@@ -1,9 +1,6 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 
-export class Thread {
-  @prop({ required: true })
-  public title!: string;
-
+export class Comment {
   @prop({ required: true })
   public content!: string;
 
@@ -20,7 +17,7 @@ export class Thread {
   public downvotes!: [string];
 
   @prop({ required: true })
-  public comments!: [string];
+  public thread!: string;
 }
 
-export const ThreadModel = getModelForClass(Thread);
+export const CommentModel = getModelForClass(Comment);
