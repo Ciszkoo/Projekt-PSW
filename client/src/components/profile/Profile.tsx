@@ -2,6 +2,7 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { selectUser } from "../../reducers/authReducer";
 import { useAppSelector } from "../../reducers/hooks";
+import Button from "../button/Button";
 import Card from "../card/Card";
 import { useModal } from "../modal/Modal";
 import DeleteAccount from "./DeleteAccount";
@@ -30,12 +31,7 @@ export const Profile = () => {
             <PencilSquareIcon className="h-4 w-4" />
           </button>
         </div>
-        <button
-          className="bg-stone-600 py-2 px-4 rounded-full shadow-md active:shadow-inner"
-          onClick={deleteAccountModal.openModal}
-        >
-          Usuń konto
-        </button>
+        <Button onClick={deleteAccountModal.openModal}>Usuń konto</Button>
       </Card>
       {usernameEditModal.modalPortal}
       {emailEditModal.modalPortal}

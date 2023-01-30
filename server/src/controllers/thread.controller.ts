@@ -14,7 +14,7 @@ export const handleCreateThread = async (req: Request, res: Response) => {
     upvotes: [],
     downvotes: [],
   });
-  return res.status(201).send({ message: "Thread created" });
+  return res.status(201).send(newThread._id);
 };
 
 export const handleGetThreads = async (req: Request, res: Response) => {

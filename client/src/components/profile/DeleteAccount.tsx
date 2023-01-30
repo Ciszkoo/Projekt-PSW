@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Button from "../button/Button";
 
 const DeleteAccount = () => {
   const navigate = useNavigate();
@@ -22,12 +23,9 @@ const DeleteAccount = () => {
   return (
     <div className="flex flex-col gap-2 text-stone-300">
       <h1>Czy napewno chcesz usunąć konto?</h1>
-      <button
-        className="bg-stone-600 py-2 px-4 w-min self-center rounded-full shadow-md active:shadow-inner"
-        onClick={handleDelete}
-      >
+      <Button className="self-center" onClick={handleDelete}>
         Tak
-      </button>
+      </Button>
     </div>
   );
 };

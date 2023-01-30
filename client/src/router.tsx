@@ -49,14 +49,16 @@ export const router = createBrowserRouter([
           }
           const paramPage = parseInt(params.page, 10);
           const page = store.getState().threads.page;
-          if (paramPage === page) return null;
+          if (paramPage === page) {
+            await store.dispatch(getThreads(paramPage));
+            return null;
+          }
           if (page === 0) {
             store.dispatch(setPage(paramPage));
             await store.dispatch(getThreads(paramPage));
             return null;
           }
           if (paramPage === page + 1) {
-            console.log("next page");
             await store.dispatch(handleNextPage(paramPage));
             store.dispatch(setPage(paramPage));
             return null;

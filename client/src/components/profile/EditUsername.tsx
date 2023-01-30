@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { editUsername, selectUser } from "../../reducers/authReducer";
 import { useAppDispatch, useAppSelector } from "../../reducers/hooks";
+import Button from "../button/Button";
 
 const EditSchema = z.object({
   value: z.string().min(3).max(20),
@@ -45,12 +46,9 @@ const EditUsername = () => {
         {...register("value")}
       />
       {!isEdited && (
-        <button
-          className="bg-stone-600 py-2 px-4 w-min self-center rounded-full shadow-md active:shadow-inner"
-          type="submit"
-        >
+        <Button className="self-center" type="submit">
           Edytuj
-        </button>
+        </Button>
       )}
       {isEdited && <p>Zaktualizowano</p>}
     </form>

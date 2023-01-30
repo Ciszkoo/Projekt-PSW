@@ -6,6 +6,7 @@ import axios from "axios";
 import { useAppDispatch } from "../../reducers/hooks";
 import { sessionCheck } from "../../reducers/authReducer";
 import Card from "../card/Card";
+import Button from "../button/Button";
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -52,12 +53,7 @@ const LoginForm = () => {
           placeholder="Password..."
           {...register("password")}
         />
-        <button
-          className="bg-stone-500 self-center py-2 px-4 rounded-full shadow-md active:shadow-inner"
-          type="submit"
-        >
-          Login
-        </button>
+        <Button className="self-center" type="submit">Zaloguj</Button>
       </form>
     </Card>
   );

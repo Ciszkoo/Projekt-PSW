@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { editEmail, selectUser } from "../../reducers/authReducer";
 import { useAppDispatch, useAppSelector } from "../../reducers/hooks";
+import Button from "../button/Button";
 
 const EditSchema = z.object({
   value: z.string().email(),
@@ -42,12 +43,9 @@ const EditEmail = () => {
         autoComplete="off"
         {...register("value")}
       />
-      <button
-        className="bg-stone-600 py-2 px-4 w-min self-center rounded-full shadow-md active:shadow-inner"
-        type="submit"
-      >
+      <Button className="self-center" type="submit">
         Edytuj
-      </button>
+      </Button>
     </form>
   );
 };
