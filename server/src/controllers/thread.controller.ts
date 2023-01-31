@@ -148,3 +148,15 @@ export const handleGetThread = async (req: Request, res: Response) => {
   );
   return res.status(200).send({ ...resThread, comments: result });
 };
+
+export const handleEditThread = async (req: Request, res: Response) => {
+  const threadId = req.params.id;
+  const body = req.body;
+  const thread = await ThreadModel.findByIdAndUpdate(threadId, body, {
+    new: true,
+  });
+  if (!thread) {
+    return res.status(404).send({ message: "Thread not found" });
+  }
+  return res.status(200).send({ message: "Thread edited" });
+};

@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   handleCreateThread,
   handleDeleteThread,
+  handleEditThread,
   handleGetThread,
   handleGetThreadComments,
   handleGetThreads,
@@ -27,10 +28,7 @@ routes.get("/:page", isAuth, handleGetThreads);
 routes.delete("/:id", isAuth, handleDeleteThread);
 
 // edycja wątku
-// routes.put("/:id", isAuth, handleEditThread);
-
-// pobieranie komentarzy wątku
-// routes.get("/comments/:id", isAuth, handleGetThreadComments);
+routes.put("/:id", isAuth, handleEditThread);
 
 // pobieranie wątku
 routes.get("/single/:id", isAuth, handleGetThread);
