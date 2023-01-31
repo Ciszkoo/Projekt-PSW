@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   handleCreateThread,
   handleDeleteThread,
+  handleGetThread,
   handleGetThreadComments,
   handleGetThreads,
 } from "../controllers/thread.controller";
@@ -29,6 +30,9 @@ routes.delete("/:id", isAuth, handleDeleteThread);
 // routes.put("/:id", isAuth, handleEditThread);
 
 // pobieranie komentarzy wątku
-routes.get("/comments/:id", isAuth, handleGetThreadComments);
+// routes.get("/comments/:id", isAuth, handleGetThreadComments);
+
+// pobieranie wątku
+routes.get("/single/:id", isAuth, handleGetThread);
 
 export default routes;

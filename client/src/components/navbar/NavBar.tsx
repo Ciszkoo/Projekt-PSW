@@ -28,7 +28,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-stone-800 h-16 shadow-md flex justify-between gap-10 sticky top-0">
+    <nav className="bg-stone-800 h-16 shadow-md flex justify-between gap-10 sticky top-0 z-20">
       <div className="flex pr-10">
         <div
           className={`${

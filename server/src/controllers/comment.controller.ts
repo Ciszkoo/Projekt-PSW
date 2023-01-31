@@ -19,7 +19,7 @@ export const handleCreateComment = async (req: Request, res: Response) => {
   return res.status(201).send(newComment._id);
 };
 export const handleDeleteComment = async (req: Request, res: Response) => {
-  const commentId = req.params.commentId;
+  const commentId = req.params.id;
   await CommentModel.findByIdAndDelete(commentId);
   return res.status(200).send({ message: "Comment deleted" });
 };
