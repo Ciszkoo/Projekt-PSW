@@ -1,7 +1,10 @@
+import axios from "axios";
 import { Children } from "react";
 import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
 import Thread from "./components/forum/Thread";
+import MQTTProvider from "./mqttContext/MQTTProvider";
 import { sessionCheck } from "./reducers/authReducer";
+import { resetGame, setGame } from "./reducers/gameReducer";
 import { getThreads, handleNextPage, setPage } from "./reducers/threadsReducer";
 import ForumRoute from "./routes/ForumRoute";
 import HomeRoute from "./routes/HomeRoute";
@@ -28,7 +31,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/home",
-        element: <HomeRoute />,
+        element: (
+          <MQTTProvider>
+            <HomeRoute />
+          </MQTTProvider>
+        ),
       },
       {
         path: "/profile",
