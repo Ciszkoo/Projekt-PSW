@@ -12,6 +12,12 @@ import { MqttClient, IClientOptions } from "mqtt";
 import { selectGame } from "../reducers/gameReducer";
 import { useParams } from "react-router-dom";
 
+interface MessageOnFindGame {
+  room: string;
+  color: "white" | "black";
+  opponent: string;
+}
+
 interface MqttContextI {
   client: MqttClient | null;
   // connect: (host: string, mqttOptions: IClientOptions) => void;
@@ -21,6 +27,13 @@ interface MqttContextI {
   publish: (topic: string, message: string) => void;
   chat: string[];
   inGame: boolean;
+  handleSetPending: () => void;
+  handleUnsetPending: () => void;
+  pending: boolean;
+  gameId: string | null;
+  color: "white" | "black";
+  turn: boolean;
+  changeTurn: () => void;
 }
 
 const MQTTContext = createContext<MqttContextI>({
@@ -32,35 +45,64 @@ const MQTTContext = createContext<MqttContextI>({
   publish: () => {},
   chat: [],
   inGame: false,
+  handleSetPending: () => {},
+  handleUnsetPending: () => {},
+  pending: false,
+  gameId: null,
+  color: "white",
+  turn: false,
+  changeTurn: () => {},
 });
 
 export const useMQTT = () => useContext(MQTTContext);
 
 const MQTTProvider = ({ children }: PropsWithChildren) => {
   const user = useAppSelector(selectUser);
+  const [pending, setPending] = useState<boolean>(false);
   const [inGame, setInGame] = useState<boolean>(false);
   const [client, setClient] = useState<MqttClient | null>(null);
-  const [subscribedTopics, setSubscribedTopics] = useState<string[]>([]);
   const [chat, setChat] = useState<string[]>([]);
+  const [gameId, setGameId] = useState<string | null>(null);
+  const [turn, setTurn] = useState<boolean>(false);
+  const [subscribedTopics, setSubscribedTopics] = useState<string[]>([]);
+  const [color, setColor] = useState<"white" | "black">("white");
+
+  const handleSetPending = () => {
+    setPending(true);
+  };
+
+  const handleUnsetPending = () => {
+    setPending(false);
+  };
 
   useEffect(() => {
     const clientMQTT = mqtt.connect("ws://localhost", { port: 8081 });
     setClient(clientMQTT);
-    // clientMQTT.subscribe(`game/${id}/chat`);
-    // clientMQTT.subscribe(`game/${id}/move`);
-    // clientMQTT.subscribe("lobby/#");
     clientMQTT.on("connect", () => console.log("connected"));
     clientMQTT.on("message", (topic, message, packet) => {
-      if (topic === "lobby") {
-        console.log("lobby");
+      if (topic === `${user?.username}`) {
+        console.log("message", message.toString());
+        setInGame(true);
+        setPending(false);
+        const messageJson: MessageOnFindGame = JSON.parse(message.toString());
+        console.log(messageJson);
+        setGameId(messageJson.room);
+        setTurn(messageJson.color === "white");
+        setColor(messageJson.color);
+        // clientMQTT.subscribe(`game/${messageJson.room}/chat`);
+        // subscribe(`game/${messageJson.gameId}/move`);
+        return;
       }
-      if (topic === `game/${user?.id}/chat`) {
-        const m = JSON.parse(message.toString());
-        console.log(m);
-
-        setChat((prev) => [...prev, message.toString()]);
-      }
-      console.log(packet);
+      // if (topic === `game/${gameId}/chat`) {
+      //   console.log("chatted", message.toString());
+      //   setChat((prev) => [...prev, message.toString()]);
+      //   return;
+      // }
+      // console.log("topic", topic);
+      // console.log(typeof topic);
+      // console.log(`game/${gameId}/chat`);
+      // console.log(topic === `game/${gameId}/chat`);
+      // console.log(packet);
     });
 
     return () => {
@@ -82,15 +124,19 @@ const MQTTProvider = ({ children }: PropsWithChildren) => {
   const subscribe = (topic: string) => {
     if (client && !subscribedTopics.includes(topic)) {
       client.subscribe(topic);
-      setSubscribedTopics(() => [...subscribedTopics, topic]);
+      setSubscribedTopics([...subscribedTopics, topic]);
     }
   };
 
   const unsubscribe = (topic: string) => {
-    if (client && subscribedTopics.includes(topic)) {
+    if (client) {
       client.unsubscribe(topic);
-      setSubscribedTopics(() => subscribedTopics.filter((t) => t !== topic));
+      setSubscribedTopics(subscribedTopics.filter((t) => t != topic));
     }
+  };
+
+  const changeTurn = () => {
+    setTurn((prev) => !prev);
   };
 
   return (
@@ -105,7 +151,14 @@ const MQTTProvider = ({ children }: PropsWithChildren) => {
         // connectionStatus,
         // payload,
         chat,
-        inGame
+        inGame,
+        handleSetPending,
+        handleUnsetPending,
+        pending,
+        gameId,
+        color,
+        turn,
+        changeTurn,
       }}
     >
       {children}
