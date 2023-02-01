@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { CommentModel } from "../models/comment.model";
 import { ThreadModel } from "../models/thread.model";
 import { UserModel } from "../models/user.model";
+import logger from "../utils/logger";
 
 export const handleCreateThread = async (req: Request, res: Response) => {
   if (!req.session.passport) {
@@ -159,4 +160,35 @@ export const handleEditThread = async (req: Request, res: Response) => {
     return res.status(404).send({ message: "Thread not found" });
   }
   return res.status(200).send({ message: "Thread edited" });
+};
+
+export const handleSearchThreads = async (req: Request, res: Response) => {
+  const q = req.params.query;
+  const reg = new RegExp(`.*${q}*`, "i");
+  const threads = await ThreadModel.find({ title: { $regex: reg } })
+    .sort({
+      date: -1,
+    })
+    .limit(5);
+  const result = await Promise.all(
+    threads.map(async (thread) => {
+      const username = await UserModel.findById(thread.author).then((user) => {
+        if (user) {
+          return user.username;
+        }
+        return "Użytkownik usunięty";
+      });
+      return {
+        id: thread._id,
+        title: thread.title,
+        content: thread.content,
+        author: username,
+        authorId: thread.author,
+        date: thread.date,
+        upvotes: thread.upvotes.length,
+        downvotes: thread.downvotes.length,
+      };
+    })
+  );
+  return res.status(200).send(result);
 };

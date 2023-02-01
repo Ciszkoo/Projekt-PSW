@@ -6,6 +6,7 @@ import {
   handleGetThread,
   handleGetThreadComments,
   handleGetThreads,
+  handleSearchThreads,
 } from "../controllers/thread.controller";
 import { isAuth } from "../middleware/authMiddleware";
 import validateResource from "../middleware/validateResource";
@@ -32,5 +33,8 @@ routes.put("/:id", isAuth, handleEditThread);
 
 // pobieranie wątku
 routes.get("/single/:id", isAuth, handleGetThread);
+
+// wyszukiwanie wątków
+routes.get("/search/:query", isAuth, handleSearchThreads);
 
 export default routes;

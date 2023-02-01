@@ -22,7 +22,9 @@ const CreateThreadModal = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const id = await axios.post("http://localhost:5000/api/thread", data);
+      const id = await axios.post("http://localhost:5000/api/thread", data, {
+        withCredentials: true,
+      });
       navigate(`/thread/${id.data}`);
     } catch (error) {
       console.log(error);

@@ -22,7 +22,6 @@ const MessageForm = () => {
   });
 
   const onSubmit = handleSubmit((data) => {
-    // console.log(gameId)
     publish(
       `game/${gameId}/chat`,
       JSON.stringify({ user: user?.username, message: data.message })

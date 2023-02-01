@@ -29,6 +29,21 @@ client.on("message", (topic, message) => {
   if (topic === "lobby/white") {
     const playerId = message.toString();
 
+    const isOnBlackList = black.findIndex(
+      (player) => player.playerId === playerId
+    );
+    const isOnWhiteList = white.findIndex(
+      (player) => player.playerId === playerId
+    );
+
+    if (isOnBlackList !== -1) {
+      black.splice(isOnBlackList, 1);
+    }
+
+    if (isOnWhiteList !== -1) {
+      white.splice(isOnWhiteList, 1);
+    }
+
     if (black.length === 0) {
       const roomId = generate();
       const gameLobby: GameLobby = { playerId, roomId };
@@ -55,6 +70,21 @@ client.on("message", (topic, message) => {
   // kolejkowanie gracza czarnego / "wrzucanie" graczy do pokoju
   if (topic === "lobby/black") {
     const playerId = message.toString();
+
+    const isOnBlackList = black.findIndex(
+      (player) => player.playerId === playerId
+    );
+    const isOnWhiteList = white.findIndex(
+      (player) => player.playerId === playerId
+    );
+
+    if (isOnBlackList !== -1) {
+      black.splice(isOnBlackList, 1);
+    }
+
+    if (isOnWhiteList !== -1) {
+      white.splice(isOnWhiteList, 1);
+    }
 
     if (white.length === 0) {
       const roomId = generate();

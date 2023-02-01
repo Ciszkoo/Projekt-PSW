@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useModal } from "../modal/Modal";
 import CreateThreadModal from "./CreateThreadModal";
 import Button from "../button/Button";
+import SearchThreadModal from "./SearchThreadModal";
 
 const Forum = () => {
   const threads = useAppSelector(selectThreads);
@@ -27,6 +28,8 @@ const Forum = () => {
 
   const createThreadModal = useModal(<CreateThreadModal />);
 
+  const searchThreadModal = useModal(<SearchThreadModal />);
+
   return (
     <div className="flex-auto p-10 w-full flex items-stretch justify-center">
       <Card customClass="grow flex-initial w-full flex flex-col gap-2 relative">
@@ -34,7 +37,9 @@ const Forum = () => {
           <Button className="basis-2/3" onClick={createThreadModal.openModal}>
             Utwórz wątek
           </Button>
-          <Button className="basis-1/3">Szukaj</Button>
+          <Button className="basis-1/3" onClick={searchThreadModal.openModal}>
+            Szukaj
+          </Button>
         </div>
         {threads.status === "loading" && <p>Ładowanie...</p>}
         {threads.status === "idle" && (
@@ -63,6 +68,7 @@ const Forum = () => {
         )}
       </Card>
       {createThreadModal.modalPortal}
+      {searchThreadModal.modalPortal}
     </div>
   );
 };
