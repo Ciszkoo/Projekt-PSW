@@ -1,3 +1,3 @@
 # Project - Web Protocols - Online Chess using MQTT
 
-not done yet + needs cleanup
+It worked for eduacational purpose. There is still a lot to improve :(
